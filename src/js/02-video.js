@@ -8,7 +8,7 @@
 import Player from '@vimeo/player';
 import throttle from 'lodash.throttle';
 
-const stopTime = 'videoplayer-current-time';
+const stopTime = 'videoplayer-current-time' = 0;
 
 const iframe = document.querySelector('iframe');
 const player = new Player(iframe, {
