@@ -8,7 +8,7 @@
 import Player from '@vimeo/player';
 import throttle from 'lodash.throttle';
 
-const stopTime = 'videoplayer-current-time' = 0;
+const TIME_KEY = 'videoplayer-current-time';
 
 const iframe = document.querySelector('iframe');
 const player = new Player(iframe, {
@@ -16,26 +16,15 @@ const player = new Player(iframe, {
   fullscreen: true,
   quality: '1080p'
 });
-// console.dir( player);
+console.dir( player);
 
 const getCurrentTime = function (currentTime) {
   const seconds = currentTime.seconds;
-  localStorage.setItem(stopTime, JSON.stringify(seconds));
+  localStorage.setItem(TIME_KEY, JSON.stringify(seconds));
     // console.log(localStorage);
 };
 // timeupdate - оновлення часу відтворення.
 player.on('timeupdate', throttle(getCurrentTime, 1000));
 
-player.setCurrentTime(JSON.parse(localStorage.getItem(stopTime))).catch(function(error) {
-    switch (error.name) {
-        case 'RangeError':
-            //  time < 0 or time > video.length
-            break;
-
-        default:
-            // some other error occurred
-            break;
-    }
-});
-
+player.setCurrentTime(JSON.parse(localStorage.getItem(TIME_KEY)) || 0);
 

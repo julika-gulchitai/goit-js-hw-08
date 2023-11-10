@@ -15,25 +15,33 @@ const inputVal = {
     textarea: document.querySelector('.feedback-form textarea'),
   
 };
-const userData = {
+let userData = {
   email: '',
   message: '',
 };
-onStorageData();
+
 inputVal.form.addEventListener('input', throttle(onFormInput, 500));
+
 inputVal.form.addEventListener('submit', event => {
-  event.preventDefault();
-  localStorage.removeItem(STORAGE);
-  event.currentTarget.reset();
-  console.log(userData);
+    event.preventDefault();
+    
+    console.log(userData);
+    localStorage.removeItem(STORAGE);
+    event.currentTarget.reset();
+    userData = {};
 });
+
+onStorageData();
+
 function onFormInput(event) {
   userData[event.target.name] = event.target.value;
   const stringifiedData = JSON.stringify(userData);
   localStorage.setItem(STORAGE, stringifiedData);
 }
+
 function onStorageData() {
-  const dataSave = JSON.parse(localStorage.getItem(STORAGE));
+    const dataSave = JSON.parse(localStorage.getItem(STORAGE));
+    console.log(dataSave);
   if (dataSave === null) {
     return;
   }
@@ -44,16 +52,3 @@ function onStorageData() {
   userData.message = dataSave.message || '';
     console.log(userData);
 }
-// const onContactFormSubmit = event => {
-//   event.preventDefault();
-
-//   contactFormEl.reset();
-//   localStorageAPI.remove('contactFormInfo');
-// };
-
-// contactFormEl.addEventListener('change', onContactFormFieldChange);
-// contactFormEl.addEventListener('submit', onContactFormSubmit);
-
-
-// localStorage.removeItem()
-// event.currentTargettarget.reset();
