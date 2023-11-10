@@ -7,53 +7,53 @@
 
 import throttle from 'lodash.throttle';
 
-const form = document.querySelector('input');
+const STORAGE = 'feedback-form-state';
 
-const STORAGE = "feedback-form-state";
-let contactForm =  {};
-
-
-function fillContactForm(event) {
-console.log('event', event);
-    for (const key in contactForm) {
-        if (contactForm.hasOwnProperty(key)) {
-            contactForm.elements[key].value = event[key];
-        }
-    }
-}
-//   if (userForm === undefined) {
-//     return;
-//   }
-
-  console.log(contactForm);
-
-  // contactFormElements.user_name.value = userDataFromLS.user_name;
-  // contactFormElements.user_email.value = userDataFromLS.user_email;
-  // contactFormElements.user_message.value = userDataFromLS.user_message;
-form.addEventListener('input', throttle( fillContactForm, 500));
-// form.addEventListener('submit', e => {
-    
-// })
-
-const onContactFormFieldChange = ({ target: contactFormField }) => {
-  const contactFormFieldValue = contactFormField.value;
-  const contactFormFieldName = contactFormField.name;
-
-  userData[contactFormFieldName] = contactFormFieldValue;
-
-  localStorageAPI.save('contactFormInfo', userData);
+const inputVal = {
+    form: document.querySelector('.feedback-form'),
+    input: document.querySelector('input'),
+    textarea: document.querySelector('.feedback-form textarea'),
+  
 };
-
-const onContactFormSubmit = event => {
+const userData = {
+  email: '',
+  message: '',
+};
+onStorageData();
+inputVal.form.addEventListener('input', throttle(onFormInput, 500));
+inputVal.form.addEventListener('submit', event => {
   event.preventDefault();
+  localStorage.removeItem(STORAGE);
+  event.currentTarget.reset();
+  console.log(userData);
+});
+function onFormInput(event) {
+  userData[event.target.name] = event.target.value;
+  const stringifiedData = JSON.stringify(userData);
+  localStorage.setItem(STORAGE, stringifiedData);
+}
+function onStorageData() {
+  const dataSave = JSON.parse(localStorage.getItem(STORAGE));
+  if (dataSave === null) {
+    return;
+  }
 
-  contactFormEl.reset();
-  localStorageAPI.remove('contactFormInfo');
-};
+  inputVal.textarea.value = dataSave.message || '';
+  inputVal.input.value = dataSave.email || '';
+  userData.email = dataSave.email || '';
+  userData.message = dataSave.message || '';
+    console.log(userData);
+}
+// const onContactFormSubmit = event => {
+//   event.preventDefault();
 
-contactFormEl.addEventListener('change', onContactFormFieldChange);
-contactFormEl.addEventListener('submit', onContactFormSubmit);
+//   contactFormEl.reset();
+//   localStorageAPI.remove('contactFormInfo');
+// };
+
+// contactFormEl.addEventListener('change', onContactFormFieldChange);
+// contactFormEl.addEventListener('submit', onContactFormSubmit);
 
 
-localStorage.removeItem()
-event.currentTargettarget.reset();
+// localStorage.removeItem()
+// event.currentTargettarget.reset();
